@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect - Profile Photo Upload</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --primary-light: #b57eed;
+            --primary-dark: #6a3093;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --bg-grey: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--bg-grey);
+        }
+        
+        /* Main Content Section */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .profile-photo-container {
+            background-color: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .profile-photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .profile-photo-title {
+            font-size: 1.75rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Gender Info Box */
+        .gender-info-box {
+            background-color: rgba(138, 43, 226, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .gender-info-box p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .small-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        /* Upload Container Styles */
+        .upload-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .upload-container h2 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            width: 100%;
+            min-height: 250px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(0,0,0,0.02);
+            transition: var(--transition);
+        }
+        
+        .preview-container:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .preview-container p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        /* Photo Guidelines Section */
+        .photo-guidelines {
+            background-color: rgba(138, 43, 226, 0.03);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 35px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .guidelines-title {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .guidelines-title i {
+            margin-right: 12px;
+            color: var(--primary-color);
+        }
+        
+        .guidelines-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .guidelines-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .guidelines-list li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 5px;
+            top: -5px;
+        }
+        
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .secondary-btn {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            font-weight: 500;
+        }
+        
+        .secondary-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            border: none;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.2);
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(138, 43, 226, 0.3);
+        }
+        
+        .upload-btn i {
+            margin-right: 10px;
+        }
+        
+        .upload-btn input {
+            display: none;
+        }
+        
+        /* Cropper Styles */
+        .cropper-container {
+            margin: 25px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            background: rgba(0,0,0,0.02);
+        }
+        
+        .image-container {
+            max-height: 450px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .cropper-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        #image-to-crop {
+            max-width: 100%;
+            max-height: 450px;
+            display: block;
+            border-radius: 8px;
+        }
+        
+        /* Face detection boxes */
+        .face-box {
+            position: absolute;
+            border: 2px solid rgba(255, 0, 0, 0.7);
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+            pointer-events: none;
+            border-radius: 4px;
+        }
+        
+        .face-label {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .face-info {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            max-width: 160px;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+        
+        /* Analysis Results Section */
+        .analysis-results {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: rgba(138, 43, 226, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .analysis-title {
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .analysis-title i {
+            margin-right: 12px;
+            color: var(--primary-color);
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(138, 43, 226, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+        
+        .result-text {
+            flex: 1;
+        }
+        
+        .result-label {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+        
+        .confidence-meter {
+            height: 6px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .confidence-level {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary-dark));
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 3px;
+        }
+        
+        /* Verification messages */
+        .verification-message {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.6;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .verification-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #155724;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .verification-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #721c24;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
+        /* Header Styles (moved to bottom) */
+        .header {
+            background-color: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            margin-top: 50px;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            width: 98%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-right: 4rem;
+            margin-left: 2rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: rgba(138, 43, 226, 0.1);
+        }
+        
+        .back-button i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+            background-color: rgba(138, 43, 226, 0.2);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #222;
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 30px;
+        }
+        
+        .footer-column {
+            width: 23%;
+            margin-bottom: 30px;
+        }
+        
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #d82a4e;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background-color: #d82a4e;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #d82a4e;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            margin-top: 30px;
+            font-size: 13px;
+            color: #999;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-photo-container {
+                padding: 25px;
+            }
+            
+            .profile-photo-title {
+                font-size: 1.5rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .footer-column {
+                width: 48%;
+            }
+            
+            .analysis-results {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-photo-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .profile-photo-title {
+                margin-bottom: 0;
+            }
+            
+            .footer-column {
+                width: 100%;
+            }
+            
+            .guidelines-list li {
+                padding-left: 25px;
+            }
+            
+            .guidelines-list li:before {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Connect</div>
+            <a href="{% url 'mainpage' connect_id=connect_id %}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Main Page
+            </a>
+        </div>
+    </header>
+    <div class="main-content">
+        <div class="profile-photo-container">
+            <!-- Upload Container Form -->
+            <div class="upload-container">
+                <h2>Upload Profile Picture</h2>
+                
+                <!-- Gender Info Box -->
+                <div class="gender-info-box">
+                    <p class="small-text">For security, your profile picture must match your gender.</p>
+                </div>
+                
+                <form method="post" enctype="multipart/form-data" id="profilePhotoForm">
+                    {% csrf_token %}
+                    <label for="profile_picture" class="upload-btn">
+                        <i class="fas fa-folder-open"></i> Choose Image
+                    </label>
+                    <input type="file" id="profile_picture" name="profile_picture" class="file-input" accept="image/*">
+                    
+                    <!-- Cropper container -->
+                    <div class="cropper-container" id="cropper-container" style="display: none;">
+                        <div class="image-container">
+                            <img id="image-to-crop" class="preview-image">
+                        </div>
+                        <div class="cropper-controls">
+                            <button type="button" class="secondary-btn" id="cancel-crop">Cancel</button>
+                            <button type="button" class="upload-btn" id="crop-btn">
+                                <i class="fas fa-crop"></i> Crop & Analyze
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Original preview container (shown when not cropping) -->
+                    <div class="preview-container" id="image-preview">
+                        <p>No image selected</p>
+                    </div>
+                    
+                    <!-- Analysis Results Section -->
+                    <div class="analysis-results" id="analysis-results" style="display: none;">
+                        <h4 class="analysis-title"><i class="fas fa-chart-bar"></i> Analysis Results</h4>
+                        <div class="result-item">
+                            <div class="result-icon">
+                                <i class="fas fa-venus-mars"></i>
+                            </div>
+                            <div class="result-text">
+                                <div class="result-label">Gender Detection</div>
+                                <div class="result-value" id="gender-result">Analyzing...</div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="gender-confidence"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="verification-message-container"></div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button type="button" class="secondary-btn" id="cancel-upload">Cancel</button>
+                        <button type="submit" class="upload-btn" id="upload-btn" style="display: none;">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Picture
+                        </button>
+                    </div>
+                    
+                    <!-- Hidden field to store cropped image data -->
+                    <input type="hidden" name="cropped_image_data" id="cropped_image_data">
+                    <!-- Hidden fields for analysis results -->
+                    <input type="hidden" name="detected_gender" id="detected_gender">
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    <!-- Header moved to bottom -->
+   
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3 class="footer-title">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Success Stories</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#">Membership</a></li>
+                    <li><a href="#">Customer Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">Contact Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Kochi, Kerala</a></li>
+                    <li><a href="tel:+911234567890"><i class="fas fa-phone"></i> +91 9234567890</a></li>
+                    <li><a href="mailto:info@example.com"><i class="fas fa-envelope"></i> connect@gmail.com</a></li>
+                </ul>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 Connect Matrimony. All Rights Reserved.
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        let cropper;
+        let originalImageData;
+        let faceBoxes = [];
+
+        // DOM Elements
+        const profilePictureInput = document.getElementById('profile_picture');
+        const imagePreview = document.getElementById('image-preview');
+        const cropperContainer = document.getElementById('cropper-container');
+        const cancelUploadBtn = document.getElementById('cancel-upload');
+        const cancelCropBtn = document.getElementById('cancel-crop');
+        const cropBtn = document.getElementById('crop-btn');
+        const uploadBtn = document.getElementById('upload-btn');
+        const profilePhotoForm = document.getElementById('profilePhotoForm');
+        const croppedImageData = document.getElementById('cropped_image_data');
+        const imageToCrop = document.getElementById('image-to-crop');
+        const analysisResults = document.getElementById('analysis-results');
+        const genderResult = document.getElementById('gender-result');
+        const genderConfidence = document.getElementById('gender-confidence');
+        const detectedGenderInput = document.getElementById('detected_gender');
+        const verificationMessageContainer = document.getElementById('verification-message-container');
+        
+        const userGender = "{{ user_gender|lower }}";
+
+        // Event Listeners
+        profilePictureInput.addEventListener('change', handleFileSelect);
+        cancelCropBtn.addEventListener('click', resetPreview);
+        cancelUploadBtn.addEventListener('click', resetUpload);
+        cropBtn.addEventListener('click', handleCrop);
+        profilePhotoForm.addEventListener('submit', handleFormSubmit);
+
+        // Functions
+        function handleFileSelect(e) {
+            if (this.files && this.files[0]) {
+                // Validate file
+                if (!validateFile(this.files[0])) {
+                    this.value = '';
+                    resetPreview();
+                    return;
+                }
+                
+                // Create preview
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    showCropper(event.target.result);
+                    analyzeImage(event.target.result, true);
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                resetPreview();
+            }
+        }
+
+        function validateFile(file) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload a valid image file (JPEG, JPG, PNG)');
+                return false;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB limit');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function showCropper(imageData) {
+            imagePreview.style.display = 'none';
+            cropperContainer.style.display = 'block';
+            analysisResults.style.display = 'none';
+            uploadBtn.style.display = 'none';
+            imageToCrop.src = imageData;
+            originalImageData = imageData;
+        }
+
+        function analyzeImage(imageData, isInitialAnalysis = false) {
+            const formData = new FormData();
+            formData.append('image_data', imageData);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            
+            if (!isInitialAnalysis) {
+                genderResult.textContent = 'Analyzing...';
+                genderConfidence.style.width = '0%';
+                verificationMessageContainer.innerHTML = '';
+            }
+            
+            fetch('/analyze-image/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => handleAnalysisResponse(data, isInitialAnalysis))
+            .catch(error => handleAnalysisError(error, isInitialAnalysis));
+        }
+
+        function handleAnalysisResponse(data, isInitialAnalysis) {
+            if (data.success && data.results?.length > 0) {
+                if (isInitialAnalysis) {
+                    faceBoxes = data.results;
+                    initializeCropperWithFaceBoxes();
+                    if (data.results.length > 1) {
+                        alert(`Detected ${data.results.length} faces. Please crop to select one.`);
+                    }
+                } else {
+                    const result = data.results[0];
+                    updateGenderResults(result);
+                    checkGenderVerification(result);
+                }
+            } else {
+                showNoFacesError(isInitialAnalysis);
+            }
+        }
+
+        function initializeCropperWithFaceBoxes() {
+            if (cropper) cropper.destroy();
+            
+            cropper = new Cropper(imageToCrop, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.8,
+                responsive: true,
+                ready: function() {
+                    faceBoxes.forEach((face, index) => createFaceBox(face, index, this.container));
+                }
+            });
+        }
+
+        function createFaceBox(face, index, container) {
+            const box = face.box;
+            
+            // Face box
+            const faceBox = document.createElement('div');
+            faceBox.className = 'face-box';
+            Object.assign(faceBox.style, {
+                left: `${box[0]}px`,
+                top: `${box[1]}px`,
+                width: `${box[2]}px`,
+                height: `${box[3]}px`
+            });
+            
+            // Face label
+            const label = document.createElement('div');
+            label.className = 'face-label';
+            label.textContent = `Face ${index + 1}`;
+            faceBox.appendChild(label);
+            
+            // Face info
+            const infoBox = document.createElement('div');
+            infoBox.className = 'face-info';
+            Object.assign(infoBox.style, {
+                left: `${box[0] + box[2] + 10}px`,
+                top: `${box[1]}px`
+            });
+            infoBox.innerHTML = `<div><strong>Face ${index + 1}:</strong></div><div>Gender: ${face.gender}</div>`;
+            
+            container.appendChild(faceBox);
+            container.appendChild(infoBox);
+        }
+
+        function updateGenderResults(result) {
+            genderResult.textContent = result.gender;
+            detectedGenderInput.value = result.gender;
+            genderConfidence.style.width = '90%'; // Assuming 90% confidence
+        }
+
+        function checkGenderVerification(result) {
+            const detectedGender = result.gender.toLowerCase();
+            const genderMapping = {
+                'male': 'male', 'female': 'female', 'man': 'male', 'woman': 'female'
+            };
+            const normalizedDetectedGender = genderMapping[detectedGender] || 'other';
+            
+            const message = document.createElement('div');
+            message.className = 'verification-message';
+            
+            if (userGender === 'other' || normalizedDetectedGender === userGender) {
+                uploadBtn.style.display = 'inline-block';
+                message.className += ' verification-success';
+                message.innerHTML = `
+                    <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+                    <strong>Verification Successful!</strong> 
+                    The detected gender matches your profile.
+                `;
+            } else {
+                uploadBtn.style.display = 'none';
+                message.className += ' verification-error';
+                message.innerHTML = `
+                    <i class="fas fa-exclamation-circle" style="margin-right: 10px;"></i>
+                    <strong>Verification Failed!</strong> 
+                    Detected gender (${result.gender}) doesn't match your profile (${userGender}).
+                `;
+            }
+            
+            verificationMessageContainer.appendChild(message);
+            analysisResults.style.display = 'block';
+        }
+
+        function showNoFacesError(isInitialAnalysis) {
+            if (isInitialAnalysis) {
+                alert('No faces detected in the image. Please try another photo.');
+            } else {
+                genderResult.textContent = 'No faces detected';
+            }
+            resetPreview();
+        }
+
+        function handleAnalysisError(error, isInitialAnalysis) {
+            console.error('Error:', error);
+            alert('Error analyzing image. Please try again.');
+            if (isInitialAnalysis) resetPreview();
+        }
+
+        function handleCrop() {
+            if (!cropper) return;
+            
+            const canvas = cropper.getCroppedCanvas({
+                width: 500, height: 500,
+                minWidth: 256, minHeight: 256,
+                maxWidth: 2000, maxHeight: 2000,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+            
+            if (canvas) {
+                const croppedImageBase64 = canvas.toDataURL('image/jpeg');
+                croppedImageData.value = croppedImageBase64;
+                
+                // Update preview
+                imagePreview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = croppedImageBase64;
+                img.className = 'preview-image';
+                imagePreview.appendChild(img);
+                
+                // UI Updates
+                cropperContainer.style.display = 'none';
+                imagePreview.style.display = 'flex';
+                cropper.destroy();
+                cropper = null;
+                analysisResults.style.display = 'block';
+                genderResult.textContent = 'Analyzing...';
+                
+                analyzeImage(croppedImageBase64);
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!croppedImageData.value && (!profilePictureInput.files || !profilePictureInput.files[0])) {
+                alert('Please select and crop an image to upload');
+                return;
+            }
+            
+            this.submit();
+        }
+
+        function resetPreview() {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            
+            document.querySelectorAll('.face-box, .face-info').forEach(el => el.remove());
+            
+            cropperContainer.style.display = 'none';
+            imagePreview.style.display = 'flex';
+            imagePreview.innerHTML = '<p>No image selected</p>';
+            croppedImageData.value = '';
+            analysisResults.style.display = 'none';
+            uploadBtn.style.display = 'none';
+            detectedGenderInput.value = '';
+            faceBoxes = [];
+            verificationMessageContainer.innerHTML = '';
+        }
+
+        function resetUpload() {
+            resetPreview();
+            profilePictureInput.value = '';
+        }
+    </script>
+</body>
+</html>

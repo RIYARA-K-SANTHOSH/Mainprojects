@@ -1,0 +1,10 @@
+Hello {{ recipient_name }},
+
+Great news! {{ sender_name }} (ID: {{ sender_id }}) has shortlisted your profile on Connect Matrimony.
+
+This means they're interested in connecting with you. You can view their profile by logging into your account.
+
+Login here: {{ site_url }}
+
+Best regards,
+Connect Matrimony Team

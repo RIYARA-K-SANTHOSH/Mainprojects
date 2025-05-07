@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --primary-light: #b57eed;
+            --primary-dark: #6a3093;
+            --secondary-color: #4361ee;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --bg-grey: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--bg-grey);
+            padding-top: 70px; /* Space for fixed header */
+            padding-bottom: 100px; /* Space for fixed footer */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            padding: 0.75rem 0;
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 100%;
+        }
+        
+        .header-container {
+            width: 98%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-right: 4rem;
+            margin-left: 2rem;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-right: 2rem;
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .connect-id-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .form-group input[readonly],
+        .form-group select[disabled] {
+            background-color: var(--light-gray);
+            color: var(--gray-color);
+            cursor: not-allowed;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        .messages {
+            margin-bottom: 25px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        /* Validation Styles */
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: var(--error-color);
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .form-group.success input,
+        .form-group.success select,
+        .form-group.success textarea {
+            border-color: var(--success-color);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #222;
+            color: white;
+            padding: 30px 0 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+        
+        .footer-column {
+            width: 23%;
+            margin-bottom: 15px;
+        }
+        
+        .footer-title {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #d82a4e;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 35px;
+            height: 2px;
+            background-color: #d82a4e;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #d82a4e;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .form-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .connect-id-badge {
+                margin-left: 0;
+            }
+            .footer-column {
+                width: 48%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-column {
+                width: 100%;
+            }
+            
+            .footer {
+                padding: 20px 0 15px;
+            }
+            
+            .footer-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Connect</div>
+            
+            <div class="nav-main">
+                <a href="{% url 'mainpage' connect_id=current_user.connect_id %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Main Page
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="form-header">
+            <div class="header-title">
+                <i class="fas fa-user-edit"></i>
+                <span>Edit Profile Information</span>
+            </div>
+            <div class="connect-id-badge">
+                <i class="fas fa-id-card"></i> {{ current_user.connect_id }}
+            </div>
+        </div>
+
+        <div class="form-container">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'edit_primary_info' connect_id=current_user.connect_id %}" id="profileForm">
+                {% csrf_token %}
+                
+                <div class="section-title">Basic Information</div>
+                
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ current_user.full_name }}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" disabled>
+                        <option value="">Select Gender</option>
+                        {% for value, label in current_user.GENDER_CHOICES %}
+                            <option value="{{ value }}" {% if current_user.gender == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" value="{{ current_user.phone }}" 
+                           pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                    <div class="error-message" id="phone-error">Please enter a valid 10-digit phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ current_user.email }}" readonly>
+                </div>
+                
+                <div class="section-title">Physical Attributes</div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" 
+                               value="{{ current_user.date_of_birth|date:'Y-m-d' }}">
+                        <div class="error-message" id="dob-error">Please enter a valid date of birth</div>
+                    </div>
+                    
+                    <!-- Height Dropdown -->
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <select id="height" name="height">
+                            <option value="">Select Height</option>
+                            <option value="140" {% if profile.height == 140 %}selected{% endif %}>140 cm</option>
+                            <option value="145" {% if profile.height == 145 %}selected{% endif %}>145 cm</option>
+                            <option value="150" {% if profile.height == 150 %}selected{% endif %}>150 cm</option>
+                            <option value="155" {% if profile.height == 155 %}selected{% endif %}>155 cm</option>
+                            <option value="160" {% if profile.height == 160 %}selected{% endif %}>160 cm</option>
+                            <option value="165" {% if profile.height == 165 %}selected{% endif %}>165 cm</option>
+                            <option value="170" {% if profile.height == 170 %}selected{% endif %}>170 cm</option>
+                            <option value="175" {% if profile.height == 175 %}selected{% endif %}>175 cm</option>
+                            <option value="180" {% if profile.height == 180 %}selected{% endif %}>180 cm</option>
+                            <option value="185" {% if profile.height == 185 %}selected{% endif %}>185 cm</option>
+                            <option value="190" {% if profile.height == 190 %}selected{% endif %}>190 cm</option>
+                            <option value="195" {% if profile.height == 195 %}selected{% endif %}>195 cm</option>
+                            <option value="200" {% if profile.height == 200 %}selected{% endif %}>200 cm</option>
+                        </select>
+                        <div class="error-message" id="height-error">Please select your height</div>
+                    </div>
+
+                    <!-- Blood Group Dropdown -->
+                    <div class="form-group">
+                        <label for="blood_group">Blood Group</label>
+                        <select id="blood_group" name="blood_group">
+                            <option value="">Select Blood Group</option>
+                            {% for value, label in current_user.BLOOD_GROUP_CHOICES %}
+                                <option value="{{ value }}" {% if current_user.blood_group == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Mother Tongue Input -->
+                    <div class="form-group">
+                        <label for="mother_tongue">Mother Tongue</label>
+                        <input type="text" id="mother_tongue" name="mother_tongue" 
+                               value="{{ current_user.mother_tongue }}" placeholder="Enter your mother tongue">
+                    </div>
+
+                    <!-- Weight Input -->
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" 
+                               value="{{ current_user.weight }}" placeholder="Enter weight in kg" min="30" max="200">
+                        <div class="error-message" id="weight-error">Please enter a valid weight (30-200 kg)</div>
+                    </div>
+
+                    <!-- Complexion Dropdown -->
+                    <div class="form-group">
+                        <label for="complexion">Complexion</label>
+                        <select id="complexion" name="complexion">
+                            <option value="">Select Complexion</option>
+                            <option value="very_fair" {% if profile.complexion == 'very_fair' %}selected{% endif %}>Very Fair</option>
+                            <option value="fair" {% if profile.complexion == 'fair' %}selected{% endif %}>Fair</option>
+                            <option value="moderate_fair" {% if profile.complexion == 'moderate_fair' %}selected{% endif %}>Moderate Fair</option>
+                            <option value="medium" {% if profile.complexion == 'medium' %}selected{% endif %}>Medium</option>
+                            <option value="dark" {% if profile.complexion == 'dark' %}selected{% endif %}>Dark</option>
+                            <option value="prefer_not" {% if profile.complexion == 'prefer_not' %}selected{% endif %}>Prefer not to say</option>
+                        </select>
+                    </div>
+
+                    <!-- Body Type Dropdown -->
+                    <div class="form-group">
+                        <label for="body_type">Body Type</label>
+                        <select id="body_type" name="body_type">
+                            <option value="">Select Body Type</option>
+                            <option value="slim" {% if profile.body_type == 'slim' %}selected{% endif %}>Slim</option>
+                            <option value="average" {% if profile.body_type == 'average' %}selected{% endif %}>Average</option>
+                            <option value="heavy" {% if profile.body_type == 'heavy' %}selected{% endif %}>Heavy</option>
+                        </select>
+                    </div>
+
+                    <!-- Physical Status Dropdown -->
+                    <div class="form-group">
+                        <label for="physical_status">Physical Status</label>
+                        <select id="physical_status" name="physical_status">
+                            <option value="">Select Physical Status</option>
+                            <option value="normal" {% if profile.physical_status == 'normal' %}selected{% endif %}>Normal</option>
+                            <option value="differently_abled" {% if profile.physical_status == 'differently_abled' %}selected{% endif %}>Differently Abled</option>
+                        </select>
+                    </div>
+
+                    <!-- Marital Status Dropdown -->
+                    <div class="form-group">
+                        <label for="marital_status">Marital Status</label>
+                        <select id="marital_status" name="marital_status">
+                            <option value="">Select Marital Status</option>
+                            <option value="unmarried" {% if profile.marital_status == 'unmarried' %}selected{% endif %}>Unmarried</option>
+                            <option value="widowed" {% if profile.marital_status == 'widowed' %}selected{% endif %}>Widowed</option>
+                            <option value="divorcee" {% if profile.marital_status == 'divorcee' %}selected{% endif %}>Divorcee</option>
+                        </select>
+                    </div>
+
+                    <!-- Family Status Dropdown -->
+                    <div class="form-group">
+                        <label for="family_status">Family Status</label>
+                        <select id="family_status" name="family_status">
+                            <option value="">Select Family Status</option>
+                            <option value="lower_middle" {% if profile.family_status == 'lower_middle' %}selected{% endif %}>Lower Middle Class</option>
+                            <option value="middle" {% if profile.family_status == 'middle' %}selected{% endif %}>Middle Class</option>
+                            <option value="upper_middle" {% if profile.family_status == 'upper_middle' %}selected{% endif %}>Upper Middle Class</option>
+                            <option value="rich" {% if profile.family_status == 'rich' %}selected{% endif %}>Rich</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="section-title">About Me</div>
+                
+                <div class="form-group full-width">
+                    <textarea id="about_me" name="about_me" placeholder="Tell us about yourself...">{{ current_user.about_me }}</textarea>
+                    <div class="error-message" id="about-error">Please enter at least 50 characters</div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'profilecompletion' current_user.connect_id %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+
+    <script>
+        // Form validation on focus/blur (mouse enter/leave)
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('profileForm');
+            const fields = [
+                { id: 'phone', validate: validatePhone },
+                { id: 'date_of_birth', validate: validateDateOfBirth },
+                { id: 'weight', validate: validateWeight },
+                { id: 'about_me', validate: validateAboutMe }
+            ];
+
+            // Add event listeners for each field
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    element.addEventListener('focus', () => validateField(field));
+                    element.addEventListener('blur', () => validateField(field));
+                }
+            });
+
+            // Form submit validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.form-group.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            // Field validation functions
+            function validateField(field) {
+                const element = document.getElementById(field.id);
+                const errorElement = document.getElementById(`${field.id}-error`);
+                const formGroup = element.closest('.form-group');
+
+                if (field.validate(element.value)) {
+                    formGroup.classList.remove('error');
+                    formGroup.classList.add('success');
+                    return true;
+                } else {
+                    formGroup.classList.add('error');
+                    formGroup.classList.remove('success');
+                    return false;
+                }
+            }
+
+            function validatePhone(phone) {
+                if (!phone) return true; // Don't validate if empty (unless required)
+                return /^\d{10}$/.test(phone);
+            }
+
+            function validateDateOfBirth(dob) {
+                if (!dob) return true; // Don't validate if empty
+                const dobDate = new Date(dob);
+                const today = new Date();
+                return dobDate < today;
+            }
+
+            function validateWeight(weight) {
+                if (!weight) return true; // Don't validate if empty
+                const weightNum = parseFloat(weight);
+                return weightNum >= 30 && weightNum <= 200;
+            }
+
+            function validateAboutMe(about) {
+                if (!about) return true; // Don't validate if empty
+                return about.length >= 50;
+            }
+        });
+    </script>
+</body>
+</html>

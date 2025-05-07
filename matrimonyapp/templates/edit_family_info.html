@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Family Information</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --primary-light: #b57eed;
+            --primary-dark: #6a3093;
+            --secondary-color: #4361ee;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --bg-grey: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--bg-grey);
+            padding-top: 70px; /* Space for fixed header */
+            padding-bottom: 100px; /* Space for fixed footer */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            padding: 0.75rem 0;
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 100%;
+        }
+        
+        .header-container {
+            width: 98%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-right: 4rem;
+            margin-left: 2rem;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-right: 2rem;
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .connect-id-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: none;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        .messages {
+            margin-bottom: 25px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        /* Validation Styles */
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: var(--error-color);
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .form-group.success input,
+        .form-group.success select,
+        .form-group.success textarea {
+            border-color: var(--success-color);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #222;
+            color: white;
+            padding: 30px 0 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+        
+        .footer-column {
+            width: 23%;
+            margin-bottom: 15px;
+        }
+        
+        .footer-title {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #d82a4e;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 35px;
+            height: 2px;
+            background-color: #d82a4e;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #d82a4e;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .footer-column {
+                width: 48%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-column {
+                width: 100%;
+            }
+            
+            .footer {
+                padding: 20px 0 15px;
+            }
+            
+            .footer-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Connect</div>
+            
+            <div class="nav-main">
+                <a href="{% url 'mainpage' connect_id=current_user.connect_id %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Main Page
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="form-header">
+            <div class="header-title">
+                <i class="fas fa-home"></i>
+                <span>Edit Family Information</span>
+            </div>
+            <div class="connect-id-badge">
+                <i class="fas fa-id-card"></i> {{ current_user.connect_id }}
+            </div>
+        </div>
+
+        <div class="form-container">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'edit_family_info' connect_id=current_user.connect_id %}" id="familyForm">
+                {% csrf_token %}
+                
+                <div class="card mb-4">
+                    <div class="card-header">Family Status</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Family Status</label>
+                            <select name="family_status" class="form-control" id="family_status">
+                                <option value="">Select Family Status</option>
+                                {% for value, label in family_status_choices %}
+                                    <option value="{{ value }}" {% if family.family_status == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="error-message" id="family_status-error">Please select a family status</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Father's Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Father's Name</label>
+                            <input type="text" name="father_name" class="form-control" id="father_name" 
+                                   value="{{ family.father_name|default:'' }}" 
+                                   pattern="[A-Za-z\s]{3,}" title="Please enter a valid name (letters only, min 3 characters)">
+                            <div class="error-message" id="father_name-error">Please enter a valid name (letters only, min 3 characters)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Father's House Name</label>
+                            <input type="text" name="father_housename" class="form-control" id="father_housename" 
+                                   value="{{ family.father_housename|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Father's Native Place</label>
+                            <input type="text" name="father_native_place" class="form-control" id="father_native_place" 
+                                   value="{{ family.father_native_place|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Father's Occupation</label>
+                            <select name="father_occupation" class="form-control" id="father_occupation">
+                                <option value="">Select Occupation</option>
+                                {% for value, label in occupation_choices %}
+                                    <option value="{{ value }}" {% if family.father_occupation == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="error-message" id="father_occupation-error">Please select an occupation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Mother's Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Mother's Name</label>
+                            <input type="text" name="mother_name" class="form-control" id="mother_name" 
+                                   value="{{ family.mother_name|default:'' }}" 
+                                   pattern="[A-Za-z\s]{3,}" title="Please enter a valid name (letters only, min 3 characters)">
+                            <div class="error-message" id="mother_name-error">Please enter a valid name (letters only, min 3 characters)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Mother's House Name</label>
+                            <input type="text" name="mother_housename" class="form-control" id="mother_housename" 
+                                   value="{{ family.mother_housename|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Mother's Native Place</label>
+                            <input type="text" name="mother_native_place" class="form-control" id="mother_native_place" 
+                                   value="{{ family.mother_native_place|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Mother's Occupation</label>
+                            <select name="mother_occupation" class="form-control" id="mother_occupation">
+                                <option value="">Select Occupation</option>
+                                {% for value, label in occupation_choices %}
+                                    <option value="{{ value }}" {% if family.mother_occupation == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="error-message" id="mother_occupation-error">Please select an occupation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Brothers Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Total Brothers</label>
+                            <input type="number" name="no_of_brothers" class="form-control" id="no_of_brothers" 
+                                   value="{{ family.no_of_brothers|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_brothers-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Married Brothers</label>
+                            <input type="number" name="no_of_brothers_married" class="form-control" id="no_of_brothers_married" 
+                                   value="{{ family.no_of_brothers_married|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_brothers_married-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Unmarried Brothers</label>
+                            <input type="number" name="no_of_brothers_unmarried" class="form-control" id="no_of_brothers_unmarried" 
+                                   value="{{ family.no_of_brothers_unmarried|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_brothers_unmarried-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Priest Brothers</label>
+                            <input type="number" name="no_of_brothers_priest" class="form-control" id="no_of_brothers_priest" 
+                                   value="{{ family.no_of_brothers_priest|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_brothers_priest-error">Please enter a valid number (0-20)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Sisters Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Total Sisters</label>
+                            <input type="number" name="no_of_sisters" class="form-control" id="no_of_sisters" 
+                                   value="{{ family.no_of_sisters|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_sisters-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Married Sisters</label>
+                            <input type="number" name="no_of_sisters_married" class="form-control" id="no_of_sisters_married" 
+                                   value="{{ family.no_of_sisters_married|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_sisters_married-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Unmarried Sisters</label>
+                            <input type="number" name="no_of_sisters_unmarried" class="form-control" id="no_of_sisters_unmarried" 
+                                   value="{{ family.no_of_sisters_unmarried|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_sisters_unmarried-error">Please enter a valid number (0-20)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Nun Sisters</label>
+                            <input type="number" name="no_of_sisters_nun" class="form-control" id="no_of_sisters_nun" 
+                                   value="{{ family.no_of_sisters_nun|default:0 }}" min="0" max="20">
+                            <div class="error-message" id="no_of_sisters_nun-error">Please enter a valid number (0-20)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Additional Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Asset Details</label>
+                            <textarea name="asset_details" class="form-control" id="asset_details" rows="3">{{ family.asset_details|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>About Family</label>
+                            <textarea name="about_family" class="form-control" id="about_family" rows="5">{{ family.about_family|default:'' }}</textarea>
+                            <div class="error-message" id="about_family-error">Please enter at least 50 characters about your family</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'profilecompletion' current_user.connect_id %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // Form validation on focus/blur (mouse enter/leave)
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('familyForm');
+            const fields = [
+                { id: 'family_status', validate: validateRequiredSelect },
+                { id: 'father_name', validate: validateName },
+                { id: 'father_occupation', validate: validateRequiredSelect },
+                { id: 'mother_name', validate: validateName },
+                { id: 'mother_occupation', validate: validateRequiredSelect },
+                { id: 'no_of_brothers', validate: validateNumber },
+                { id: 'no_of_brothers_married', validate: validateNumber },
+                { id: 'no_of_brothers_unmarried', validate: validateNumber },
+                { id: 'no_of_brothers_priest', validate: validateNumber },
+                { id: 'no_of_sisters', validate: validateNumber },
+                { id: 'no_of_sisters_married', validate: validateNumber },
+                { id: 'no_of_sisters_unmarried', validate: validateNumber },
+                { id: 'no_of_sisters_nun', validate: validateNumber },
+                { id: 'about_family', validate: validateAboutFamily }
+            ];
+
+            // Add event listeners for each field
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    element.addEventListener('focus', () => validateField(field));
+                    element.addEventListener('blur', () => validateField(field));
+                    element.addEventListener('change', () => validateField(field));
+                    
+                    // For number fields, validate on input
+                    if (field.id.includes('no_of_')) {
+                        element.addEventListener('input', () => validateField(field));
+                    }
+                }
+            });
+
+            // Form submit validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.form-group.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            // Field validation functions
+            function validateField(field) {
+                const element = document.getElementById(field.id);
+                const errorElement = document.getElementById(`${field.id}-error`);
+                const formGroup = element.closest('.form-group');
+
+                if (field.validate(element.value)) {
+                    formGroup.classList.remove('error');
+                    formGroup.classList.add('success');
+                    return true;
+                } else {
+                    formGroup.classList.add('error');
+                    formGroup.classList.remove('success');
+                    return false;
+                }
+            }
+
+            function validateRequiredSelect(value) {
+                return value !== "";
+            }
+
+            function validateName(name) {
+                if (!name) return true; // Don't validate if empty (unless required)
+                return /^[A-Za-z\s]{3,}$/.test(name);
+            }
+
+            function validateNumber(number) {
+                if (!number) return true; // Don't validate if empty
+                const num = parseInt(number);
+                return !isNaN(num) && num >= 0 && num <= 20;
+            }
+
+            function validateAboutFamily(about) {
+                if (!about) return true; // Don't validate if empty
+                return about.length >= 50;
+            }
+
+            // Validate brother/sister counts consistency
+            function validateSiblingCounts() {
+                const totalBrothers = parseInt(document.getElementById('no_of_brothers').value) || 0;
+                const marriedBrothers = parseInt(document.getElementById('no_of_brothers_married').value) || 0;
+                const unmarriedBrothers = parseInt(document.getElementById('no_of_brothers_unmarried').value) || 0;
+                const priestBrothers = parseInt(document.getElementById('no_of_brothers_priest').value) || 0;
+                
+                const totalSisters = parseInt(document.getElementById('no_of_sisters').value) || 0;
+                const marriedSisters = parseInt(document.getElementById('no_of_sisters_married').value) || 0;
+                const unmarriedSisters = parseInt(document.getElementById('no_of_sisters_unmarried').value) || 0;
+                const nunSisters = parseInt(document.getElementById('no_of_sisters_nun').value) || 0;
+                
+                // Validate brothers
+                if (marriedBrothers + unmarriedBrothers + priestBrothers > totalBrothers) {
+                    alert("Sum of married, unmarried and priest brothers cannot exceed total brothers");
+                    return false;
+                }
+                
+                // Validate sisters
+                if (marriedSisters + unmarriedSisters + nunSisters > totalSisters) {
+                    alert("Sum of married, unmarried and nun sisters cannot exceed total sisters");
+                    return false;
+                }
+                
+                return true;
+            }
+
+            // Add sibling count validation to form submit
+            form.addEventListener('submit', function(e) {
+                if (!validateSiblingCounts()) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

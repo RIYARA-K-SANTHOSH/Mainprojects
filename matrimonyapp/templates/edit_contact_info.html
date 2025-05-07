@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Contact Information</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --primary-light: #b57eed;
+            --primary-dark: #6a3093;
+            --secondary-color: #4361ee;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --bg-grey: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--bg-grey);
+            padding-top: 70px; /* Space for fixed header */
+            padding-bottom: 100px; /* Space for fixed footer */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            padding: 0.75rem 0;
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 100%;
+        }
+        
+        .header-container {
+            width: 98%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-right: 4rem;
+            margin-left: 2rem;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-right: 2rem;
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .connect-id-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: none;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        .messages {
+            margin-bottom: 25px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        /* Validation Styles */
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: var(--error-color);
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .form-group.success input,
+        .form-group.success select,
+        .form-group.success textarea {
+            border-color: var(--success-color);
+        }
+
+        /* Grid Layout for Contact Info */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .address-fields {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #222;
+            color: white;
+            padding: 30px 0 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+        
+        .footer-column {
+            width: 23%;
+            margin-bottom: 15px;
+        }
+        
+        .footer-title {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #d82a4e;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 35px;
+            height: 2px;
+            background-color: #d82a4e;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #d82a4e;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .footer-column {
+                width: 48%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-column {
+                width: 100%;
+            }
+            
+            .footer {
+                padding: 20px 0 15px;
+            }
+            
+            .footer-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Connect</div>
+            
+            <div class="nav-main">
+                <a href="{% url 'mainpage' connect_id=current_user.connect_id %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Main Page
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="form-header">
+            <div class="header-title">
+                <i class="fas fa-address-book"></i>
+                <span>Edit Contact Information</span>
+            </div>
+            <div class="connect-id-badge">
+                <i class="fas fa-id-card"></i> {{ current_user.connect_id }}
+            </div>
+        </div>
+
+        <div class="form-container">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'edit_contact_info' connect_id=current_user.connect_id %}" id="contactForm">
+                {% csrf_token %}
+                
+                <div class="card mb-4">
+                    <div class="card-header">Phone Numbers</div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <!-- Mobile Number -->
+                            <div class="form-group">
+                                <label for="mobile_code">Mobile Code:</label>
+                                <select class="form-control" id="mobile_code" name="mobile_code">
+                                    {% for code, name in additional_profile.PHONE_CODE_CHOICES %}
+                                        <option value="{{ code }}" {% if code == additional_profile.mobile_code %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="mobile_number">Mobile Number:</label>
+                                <input type="text" class="form-control" id="mobile_number" name="mobile_number" 
+                                       value="{{ additional_profile.mobile_number }}">
+                                <div class="error-message" id="mobile_number-error">Please enter a valid mobile number</div>
+                            </div>
+                            
+                            <!-- WhatsApp Number -->
+                            <div class="form-group">
+                                <label for="whatsapp_code">WhatsApp Code:</label>
+                                <select class="form-control" id="whatsapp_code" name="whatsapp_code">
+                                    {% for code, name in additional_profile.PHONE_CODE_CHOICES %}
+                                        <option value="{{ code }}" {% if code == additional_profile.whatsapp_code %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="whatsapp_number">WhatsApp Number:</label>
+                                <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number" 
+                                       value="{{ additional_profile.whatsapp_number }}">
+                                <div class="error-message" id="whatsapp_number-error">Please enter a valid WhatsApp number</div>
+                            </div>
+                            
+                            <!-- Secondary Mobile -->
+                            <div class="form-group">
+                                <label for="secondary_mobile_code">Secondary Mobile Code:</label>
+                                <select class="form-control" id="secondary_mobile_code" name="secondary_mobile_code">
+                                    {% for code, name in additional_profile.PHONE_CODE_CHOICES %}
+                                        <option value="{{ code }}" {% if code == additional_profile.secondary_mobile_code %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="secondary_mobile">Secondary Mobile No.:</label>
+                                <input type="text" class="form-control" id="secondary_mobile" name="secondary_mobile" 
+                                       value="{{ additional_profile.secondary_mobile|default:'' }}">
+                            </div>
+                            
+                            <!-- Landline -->
+                            <div class="form-group">
+                                <label for="landline_number">Residential Landline No.:</label>
+                                <input type="text" class="form-control" id="landline_number" name="landline_number" 
+                                       value="{{ additional_profile.landline_number|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Email Addresses</div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="form-group">
+                                <label for="email">Email ID:</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ current_user.email }}" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="alternate_email">Alternate Email ID:</label>
+                                <input type="email" class="form-control" id="alternate_email" name="alternate_email" 
+                                       value="{{ additional_profile.alternate_email|default:'' }}">
+                                <div class="error-message" id="alternate_email-error">Please enter a valid email address</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="preferred_contact_time">Preferred Time To Reach You:</label>
+                                <input type="text" class="form-control" id="preferred_contact_time" name="preferred_contact_time" 
+                                       value="{{ additional_profile.preferred_contact_time|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Address Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="address">Communication Address:</label>
+                            <textarea class="form-control" id="address" name="address" rows="3">{{ additional_profile.address }}</textarea>
+                            <div class="error-message" id="address-error">Please enter your communication address</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pincode">Pincode:</label>
+                            <input type="text" class="form-control" id="pincode" name="pincode" 
+                                   value="{{ additional_profile.pincode }}">
+                            <div class="error-message" id="pincode-error">Please enter a valid pincode</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="present_address_type">Present Address:</label>
+                            <select class="form-control present-address-select" id="present_address_type" name="present_address_type">
+                                <option value="same" {% if additional_profile.present_address_type == 'same' %}selected{% endif %}>Same as Communication Address</option>
+                                <option value="different" {% if additional_profile.present_address_type == 'different' %}selected{% endif %}>Different Address</option>
+                            </select>
+                            <div id="present-address-fields" class="address-fields" {% if additional_profile.present_address_type == 'different' %}style="display: block;"{% endif %}>
+                                <div class="form-group">
+                                    <label for="present_address">Present Address:</label>
+                                    <textarea class="form-control" id="present_address" name="present_address" rows="3">{% if additional_profile.present_address_type == 'different' %}{{ additional_profile.present_address }}{% endif %}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="present_pincode">Present Pincode:</label>
+                                    <input type="text" class="form-control" id="present_pincode" name="present_pincode" 
+                                           value="{% if additional_profile.present_address_type == 'different' %}{{ additional_profile.present_pincode }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="permanent_address_type">Permanent Address:</label>
+                            <select class="form-control permanent-address-select" id="permanent_address_type" name="permanent_address_type">
+                                <option value="same" {% if additional_profile.permanent_address_type == 'same' %}selected{% endif %}>Same as Communication Address</option>
+                                <option value="different" {% if additional_profile.permanent_address_type == 'different' %}selected{% endif %}>Different Address</option>
+                            </select>
+                            <div id="permanent-address-fields" class="address-fields" {% if additional_profile.permanent_address_type == 'different' %}style="display: block;"{% endif %}>
+                                <div class="form-group">
+                                    <label for="permanent_address">Permanent Address:</label>
+                                    <textarea class="form-control" id="permanent_address" name="permanent_address" rows="3">{% if additional_profile.permanent_address_type == 'different' %}{{ additional_profile.permanent_address }}{% endif %}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="permanent_pincode">Permanent Pincode:</label>
+                                    <input type="text" class="form-control" id="permanent_pincode" name="permanent_pincode" 
+                                           value="{% if additional_profile.permanent_address_type == 'different' %}{{ additional_profile.permanent_pincode }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'profilecompletion' current_user.connect_id %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Present Address toggle
+            const presentAddressSelect = document.querySelector('.present-address-select');
+            const presentAddressFields = document.getElementById('present-address-fields');
+            
+            presentAddressSelect.addEventListener('change', function() {
+                if (this.value === 'different') {
+                    presentAddressFields.style.display = 'block';
+                } else {
+                    presentAddressFields.style.display = 'none';
+                }
+            });
+            
+            // Permanent Address toggle
+            const permanentAddressSelect = document.querySelector('.permanent-address-select');
+            const permanentAddressFields = document.getElementById('permanent-address-fields');
+            
+            permanentAddressSelect.addEventListener('change', function() {
+                if (this.value === 'different') {
+                    permanentAddressFields.style.display = 'block';
+                } else {
+                    permanentAddressFields.style.display = 'none';
+                }
+            });
+
+            // Form validation
+            const form = document.getElementById('contactForm');
+            const fields = [
+                { id: 'mobile_number', validate: validatePhoneNumber },
+                { id: 'whatsapp_number', validate: validatePhoneNumber },
+                { id: 'alternate_email', validate: validateEmail },
+                { id: 'address', validate: validateRequired },
+                { id: 'pincode', validate: validatePincode }
+            ];
+
+            // Add event listeners for each field
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    element.addEventListener('focus', () => validateField(field));
+                    element.addEventListener('blur', () => validateField(field));
+                    element.addEventListener('input', () => validateField(field));
+                }
+            });
+
+            // Form submit validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                fields.forEach(field => {
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.form-group.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            // Field validation functions
+            function validateField(field) {
+                const element = document.getElementById(field.id);
+                const errorElement = document.getElementById(`${field.id}-error`);
+                const formGroup = element.closest('.form-group');
+
+                if (field.validate(element.value)) {
+                    formGroup.classList.remove('error');
+                    formGroup.classList.add('success');
+                    return true;
+                } else {
+                    formGroup.classList.add('error');
+                    formGroup.classList.remove('success');
+                    return false;
+                }
+            }
+
+            function validateRequired(value) {
+                return value.trim() !== "";
+            }
+
+            function validatePhoneNumber(number) {
+                if (!number) return true; // Don't validate if empty
+                return /^[0-9]{10,15}$/.test(number);
+            }
+
+            function validateEmail(email) {
+                if (!email) return true; // Don't validate if empty
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function validatePincode(pincode) {
+                if (!pincode) return true; // Don't validate if empty
+                return /^[0-9]{6}$/.test(pincode);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - User Management</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Additional styles specific to the user list page */
+        .main-content {
+            padding: 30px;
+            width: calc(100% - 250px);
+            margin-left: 250px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .user-table th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .user-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+        
+        .user-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #e6f7ee;
+            color: #28a745;
+        }
+        
+        .status-inactive {
+            background-color: #fef0f0;
+            color: #dc3545;
+        }
+        
+        .connect-id {
+            font-family: 'Courier New', monospace;
+            color: #6c757d;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn {
+            background-color: #e7f1ff;
+            color: #1a73e8;
+            margin-right: 5px;
+        }
+        
+        .edit-btn:hover {
+            background-color: #d0e3ff;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>Admin Dashboard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="{% url 'user_list' %}">
+                         
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'plans_list' %}">
+                          
+                            <span>Plans</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'success_stories' %}">
+                           
+                            <span>Success Stories</span>
+                        </a>
+                    </li>
+                    <li class="logout-link">
+                        <a href="{% url 'logout' %}">
+                        
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">User Management</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                       
+                                <th>Gender</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Connect ID</th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.full_name }}</td>
+                                <td>{{ user.get_gender_display }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td class="connect-id">{{ user.connect_id }}</td>
+                                <td>
+                                   
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="no-data">
+                                    <i class="fas fa-user-slash" style="font-size: 24px; margin-bottom: 10px;"></i>
+                                    <p>No users found</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple script to highlight active sidebar item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentUrl) {
+                    link.parentElement.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
