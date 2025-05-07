@@ -30,7 +30,8 @@ chardet==5.2.0
 charset-normalizer==3.3.2
 chatbot==1.5.2b0
 ChatterBot==1.2.0
-chatterbot-corpus==1.2.0
+chatterbot-corpus==1.2.0; python_version < '3.0'
+# Removing PyYAML explicit version to let pip resolve conflicts
 click==8.1.8
 cloudpathlib==0.20.0
 cmake==3.31.6
@@ -168,7 +169,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python3-openid==3.2.0
 pytz==2024.2
-PyYAML==6.0.2
+# PyYAML==6.0.2  # Removed to resolve dependency conflicts
 qrcode==8.0
 razorpay==1.4.2
 redis==5.2.1
