@@ -1,0 +1,66 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django-related
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+db.sqlite3
+
+# Media
+/media/
+*.webm
+*.mp4
+*.mkv
+
+# Environment variables
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Virtual Environments
+venv/
+myenv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Node.js (if applicable)
+node_modules/
+
+# Migrations
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Secrets
+secret.txt
+config.json
+settings_local.py
+
+# Compiled files
+*.so
+*.dll
+*.dylib
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Static and media files (optional if generated)
+staticfiles/
+static/
+media/
