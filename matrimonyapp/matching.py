@@ -1,10 +1,4 @@
 from django.db.models import Q
-from sklearn.neighbors import NearestNeighbors
-from sklearn.preprocessing import OneHotEncoder
-import pandas as pd
-import numpy as np
-from scipy.sparse import csr_matrix
-from django.contrib.auth import get_user_model
 import logging
 
 # Import models using the correct app label
@@ -44,6 +38,10 @@ class Matcher:
     
     def preprocess_data(self, users):
         """Preprocess only the key matching criteria"""
+        # Import ML libraries only when function is called
+        import pandas as pd
+        from sklearn.preprocessing import OneHotEncoder
+        
         data = []
         valid_users = []
         
@@ -72,6 +70,9 @@ class Matcher:
         if not users:
             self.model = None
             return
+        
+        # Import scikit-learn only when needed    
+        from sklearn.neighbors import NearestNeighbors
             
         processed_data, valid_users = self.preprocess_data(users)
         
@@ -95,6 +96,9 @@ class Matcher:
         """Get matches where all three criteria match"""
         if not all_users:
             return []
+        
+        # Import pandas here when needed
+        import pandas as pd
             
         if not self.model:
             self.fit(all_users)

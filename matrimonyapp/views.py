@@ -954,6 +954,12 @@ def analyze_image(request):
         if not image_data:
             return JsonResponse({'success': False, 'error': 'No image data provided'})
         
+        # Import required packages only when needed
+        import base64
+        import numpy as np
+        import cv2
+        from .age_gender_predictor import AgeGenderPredictor
+        
         format, imgstr = image_data.split(';base64,')
         ext = format.split('/')[-1]
         

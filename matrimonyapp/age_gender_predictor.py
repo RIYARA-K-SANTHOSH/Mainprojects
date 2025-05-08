@@ -1,7 +1,5 @@
-import cv2
-import numpy as np
-from django.conf import settings
 import os
+from django.conf import settings
 
 GENDER_MODEL = os.path.join(settings.BASE_DIR, 'models/gender_net.caffemodel')
 GENDER_PROTO = os.path.join(settings.BASE_DIR, 'models/gender_deploy.prototxt')
@@ -12,10 +10,26 @@ GENDER_LIST = ['Male', 'Female']
 
 class AgeGenderPredictor:
     def __init__(self):
-        self.face_net = cv2.dnn.readNet(FACE_MODEL, FACE_PROTO)
-        self.gender_net = cv2.dnn.readNet(GENDER_MODEL, GENDER_PROTO)
+        # Don't load dependencies or models in constructor
+        self.face_net = None
+        self.gender_net = None
+        self._is_initialized = False
+
+    def _lazy_init(self):
+        """Lazy initialization of ML models"""
+        if not self._is_initialized:
+            # Import CV2 only when needed
+            import cv2
+            self.face_net = cv2.dnn.readNet(FACE_MODEL, FACE_PROTO)
+            self.gender_net = cv2.dnn.readNet(GENDER_MODEL, GENDER_PROTO)
+            self._is_initialized = True
 
     def get_faces(self, frame):
+        self._lazy_init()
+        # Import NumPy only when needed
+        import cv2
+        import numpy as np
+        
         blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300), [
                                      104, 117, 123], swapRB=False)
         self.face_net.setInput(blob)
@@ -31,6 +45,11 @@ class AgeGenderPredictor:
         return faces
 
     def predict(self, frame):
+        self._lazy_init()
+        # Import needed packages only when the function is called
+        import cv2
+        import numpy as np
+        
         results = []
         faces = self.get_faces(frame)
         for (x, y, w, h) in faces:

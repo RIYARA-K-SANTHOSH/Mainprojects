@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jy()su#suw6cw-#gx13esb-+69=p8u(h@x_=ok!_c1mn6@c52a'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-jy()su#suw6cw-#gx13esb-+69=p8u(h@x_=ok!_c1mn6@c52a')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# Add render.com domain to allowed hosts
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -73,12 +83,27 @@ WSGI_APPLICATION = 'connect.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Use SQLite for local development and MySQL for production
+if not DEBUG:
+    # Production database (MySQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME', 'connect_db'),
+            'USER': os.environ.get('DB_USER', 'connect_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+        }
     }
-}
+else:
+    # Development database (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -117,59 +142,49 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, "matrimonyapp/static"),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "matrimonyapp/static"),
-]
-
 # Add these to your settings.py
-TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID', 'AC987b66ad808b3bd7a064f488ffbbfb99')
-TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN', 'fa6579284e94ea17830b2dad343adc13')
-TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER', '+12065551234')
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', 'AC987b66ad808b3bd7a064f488ffbbfb99')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', 'fa6579284e94ea17830b2dad343adc13')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '+12065551234')
 
 # Session settings (add if not present)
 SESSION_COOKIE_AGE = 3600  # 1 hour
 SESSION_SAVE_EVERY_REQUEST = True
-# settings.py
 
-# At the bottom of the file, add:
+# Media settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path where files are stored
 MEDIA_URL = '/media/'  # URL that serves the media files
 
-# settings.py
+# Logout redirect
 LOGOUT_REDIRECT_URL = 'home'  # Name of your login URL pattern
 
+# Razorpay settings
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_EbU4N8fIfnLT4j')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'lKNf14YtGF7bMbGcFklRzOsW')
+RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET', 'your_webhook_secret')
 
-RAZORPAY_KEY_ID = 'rzp_test_EbU4N8fIfnLT4j'
-RAZORPAY_KEY_SECRET = 'lKNf14YtGF7bMbGcFklRzOsW'
-
-RAZORPAY_WEBHOOK_SECRET = 'your_webhook_secret'
-
-
-
+# Temp directory
 TEMP_DIR = os.path.join(MEDIA_ROOT, 'temp')
 os.makedirs(TEMP_DIR, exist_ok=True)
 
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'riyarasanthosh16@gmail.com'
-EMAIL_HOST_PASSWORD = 'bjvu ghiw amys iawg'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'riyarasanthosh16@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'bjvu ghiw amys iawg')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
-# Increase the maximum upload size to 10MB (or your preferred size)
+# File upload settings
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-
-# For even larger files, you might need to adjust these in your web server (Nginx/Apache) too
