@@ -28,15 +28,32 @@ A Django-based matrimony application with ML features for profile matching and a
 
    In the Render dashboard for your web service, go to "Environment" and add the environment variables listed in the `env.example` file. Make sure to update them with your actual values.
 
+   **IMPORTANT:** For Render, it's recommended to use the `DATABASE_URL` environment variable instead of individual database settings.
+
 3. **Database Setup**
 
    - For production, use a MySQL database (you can use Render's database service or an external one)
    - For the free tier, you can use SQLite for testing, but it's not recommended for production
+   - If using Render's database service, copy the `External Database URL` and set it as `DATABASE_URL` environment variable
 
-4. **Initial Setup**
+4. **Static Files Configuration**
+
+   The application is configured to use WhiteNoise for serving static files. This is already set up in the settings.py file. The build.sh script will:
+   - Create necessary directories
+   - Run collectstatic to gather all static files into the staticfiles directory
+   - WhiteNoise will serve these files efficiently in production
+
+   **Troubleshooting Static Files:**
+   - If static files aren't loading, make sure the `STATIC_URL` and `STATIC_ROOT` settings are correct
+   - Check that `whitenoise.middleware.WhiteNoiseMiddleware` is in your MIDDLEWARE settings
+   - Verify that the static files were collected during the build process (check build logs)
+   - Make sure there are no errors in your HTML templates referencing static files
+
+5. **Initial Setup**
 
    The `build.sh` script will automatically:
    - Install dependencies from requirements.txt
+   - Create necessary directories
    - Collect static files
    - Run database migrations
 
